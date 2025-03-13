@@ -1,7 +1,9 @@
 using APIRestaurante.Infrastructure.Data;
+using APIRestaurante.Domain.Entities;
+using APIRestaurante.Application.Interfaces;
+using APIRestaurante.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using APIRestaurante.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -68,12 +70,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 var app = builder.Build();
+
+app.MapGet("/", () => "API Restaurante v1"); 
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.ConfigObject.AdditionalItems.Add("theme", "dark");
+    });
 }
 
 app.UseHttpsRedirection();
