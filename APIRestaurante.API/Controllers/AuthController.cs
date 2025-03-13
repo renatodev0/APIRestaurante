@@ -1,5 +1,6 @@
 using APIRestaurante.Application.DTOs;
 using APIRestaurante.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIRestaurante.API.Controllers
@@ -15,6 +16,7 @@ namespace APIRestaurante.API.Controllers
             _authService = authService;
         }
 
+        [Authorize] 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
         {
