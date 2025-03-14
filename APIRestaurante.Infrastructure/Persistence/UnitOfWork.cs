@@ -1,8 +1,5 @@
 using APIRestaurante.Domain.Interfaces;
 using APIRestaurante.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace APIRestaurante.Infrastructure.Persistence
 {
@@ -11,11 +8,13 @@ namespace APIRestaurante.Infrastructure.Persistence
         private readonly RestaurantContext _context;
 
         public IMenuItemRepository MenuItems { get; }
+        public ICustomerRepository Customers { get; }
 
-        public UnitOfWork(RestaurantContext context, IMenuItemRepository menuItemRepository)
+        public UnitOfWork(RestaurantContext context, IMenuItemRepository menuItemRepository, ICustomerRepository customerRepository)
         {
             _context = context;
             MenuItems = menuItemRepository;
+            Customers = customerRepository;
         }
 
         public async Task CompleteAsync()
