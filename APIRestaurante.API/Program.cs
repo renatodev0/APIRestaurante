@@ -2,10 +2,14 @@ using APIRestaurante.Infrastructure.Data;
 using APIRestaurante.Domain.Entities;
 using APIRestaurante.Application.Interfaces;
 using APIRestaurante.Application.Services;
+using APIRestaurante.Domain.Interfaces;
+using APIRestaurante.Infrastructure.Persistence; 
+using APIRestaurante.Infrastructure.Persistence.Repositories; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using DotNetEnv;
 
@@ -68,9 +72,38 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+        Description = "Insira o token JWT no formato 'Bearer {seu_token}'"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMenuItemService, MenuItemService>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 
 var app = builder.Build();
 
