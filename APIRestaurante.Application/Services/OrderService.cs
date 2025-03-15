@@ -11,6 +11,10 @@ public class OrderService : IOrderService
         _unitOfWork = unitOfWork;
     }
 
+    public async Task<IEnumerable<Order>> GetAllAsync()
+    {
+        return await _unitOfWork.Orders.GetAllAsync();
+    }
     public async Task<Order> CreateOrderAsync(CreateOrderDto request)
     {
         var customer = await _unitOfWork.Customers.GetFirstOrDefaultAsync(c => c.PhoneNumber == request.PhoneNumber);
@@ -74,7 +78,7 @@ public class OrderService : IOrderService
         order.TotalPriceCents = request.TotalPriceCents ?? order.TotalPriceCents;
         order.UpdatedAt = DateTime.UtcNow;
         order.UpdatedBy = userId;
-        
+
         await _unitOfWork.Orders.UpdateAsync(order);
         await _unitOfWork.CompleteAsync();
 

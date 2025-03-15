@@ -4,6 +4,7 @@ using APIRestaurante.Application.DTOs;
 public interface IOrderService
 {
     Task<Order> CreateOrderAsync(CreateOrderDto request);
+    Task<IEnumerable<Order>> GetAllAsync();
     Task<Order?> GetOrderByIdAsync(int id);
     Task<Order?> UpdateOrderAsync(int id, string userId, UpdateOrderDto request);
     Task<Order?> AddOrderItemAsync(int id, string userId, AddOrderItemDto request);
