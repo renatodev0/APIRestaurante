@@ -17,6 +17,14 @@ namespace APIRestaurante.Api.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAll()
+        {
+            var orders = await _orderService.GetAllAsync();
+            return Ok(new { orders });
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
