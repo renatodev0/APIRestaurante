@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using APIRestaurante.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APIRestaurante.Api.Controllers
 {
@@ -49,5 +50,79 @@ namespace APIRestaurante.Api.Controllers
 
             return Ok(order);
         }
+
+        [HttpPatch("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateOrderAsync(int id, [FromBody] UpdateOrderDto request)
+        {
+            try
+            {
+                var order = await _orderService.UpdateOrderAsync(id, request);
+                if (order == null)
+                {
+                    return NotFound(new { message = "Pedido não encontrado." });
+                }
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("{orderId}/items")]
+        [Authorize]
+        public async Task<IActionResult> AddOrderItemAsync(int orderId, [FromBody] AddOrderItemDto request)
+        {
+            try
+            {
+                var order = await _orderService.AddOrderItemAsync(orderId, request);
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+        [HttpPatch("/items/{orderItemId}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateOrderItemAsync(int orderItemId, [FromBody] UpdateOrderItemDto request)
+        {
+            try
+            {
+                var order = await _orderService.UpdateOrderItemAsync(orderItemId, request);
+                if (order == null)
+                {
+                    return NotFound(new { message = "Item do pedido não encontrado." });
+                }
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("/items/{orderItemId}")]
+        [Authorize]
+        public async Task<IActionResult> RemoveOrderItemAsync(int orderItemId)
+        {
+            try
+            {
+                var order = await _orderService.RemoveOrderItemAsync(orderItemId);
+                if (order == null)
+                {
+                    return NotFound(new { message = "Item do pedido não encontrado." });
+                }
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }

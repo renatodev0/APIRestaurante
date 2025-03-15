@@ -9,15 +9,18 @@ namespace APIRestaurante.Infrastructure.Persistence
 
         public IMenuItemRepository MenuItems { get; }
         public ICustomerRepository Customers { get; }
-        
+
         public IOrderRepository Orders { get; }
 
-        public UnitOfWork(RestaurantContext context, IMenuItemRepository menuItemRepository, ICustomerRepository customerRepository, IOrderRepository orderRepository)
+        public IOrderItemRepository OrderItems { get; }
+
+        public UnitOfWork(RestaurantContext context, IMenuItemRepository menuItemRepository, ICustomerRepository customerRepository, IOrderRepository orderRepository, IOrderItemRepository orderItemRepository)
         {
             _context = context;
             Orders = orderRepository;
+            OrderItems = orderItemRepository;
             MenuItems = menuItemRepository;
-            Customers = customerRepository; 
+            Customers = customerRepository;
         }
 
         public async Task CompleteAsync()
