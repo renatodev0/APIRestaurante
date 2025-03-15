@@ -7,5 +7,6 @@ namespace APIRestaurante.Domain.Interfaces
         Task AddAsync(Order order);
         Task<Order?> GetByIdAsync(int id);
         Task<IEnumerable<Order>> GetAllAsync();
+        Task UpdateAsync(Order order);
     }
 }

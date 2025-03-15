@@ -17,7 +17,6 @@ namespace APIRestaurante.API.Controllers
             _menuItemService = menuItemService;
         }
 
-        // GET: /MenuItem
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -25,7 +24,6 @@ namespace APIRestaurante.API.Controllers
             return Ok(new { items = menuItems });
         }
 
-        // GET: /MenuItem/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -36,7 +34,6 @@ namespace APIRestaurante.API.Controllers
             return Ok(menuItem);
         }
 
-        // POST: /MenuItem
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Create([FromBody] MenuItemCreateDto menuItemDto)
@@ -48,7 +45,6 @@ namespace APIRestaurante.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = menuItem.Id }, menuItem);
         }
 
-        // PATCH: /MenuItem/5
         [HttpPatch("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdatePartial(int id, [FromBody] MenuItemUpdateDto menuItem)
