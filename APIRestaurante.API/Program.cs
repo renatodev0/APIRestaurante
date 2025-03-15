@@ -3,8 +3,8 @@ using APIRestaurante.Domain.Entities;
 using APIRestaurante.Application.Interfaces;
 using APIRestaurante.Application.Services;
 using APIRestaurante.Domain.Interfaces;
-using APIRestaurante.Infrastructure.Persistence; 
-using APIRestaurante.Infrastructure.Persistence.Repositories; 
+using APIRestaurante.Infrastructure.Persistence;
+using APIRestaurante.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -112,16 +112,13 @@ builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "API Restaurante v1"); 
+app.MapGet("/", () => "API Restaurante v1");
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.ConfigObject.AdditionalItems.Add("theme", "dark");
-    });
-}
+    options.ConfigObject.AdditionalItems.Add("theme", "dark");
+});
 
 app.UseHttpsRedirection();
 
