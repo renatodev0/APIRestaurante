@@ -100,6 +100,8 @@ public class OrderService : IOrderService
                 Quantity = item.Quantity
             };
 
+            order.OrderItems.Add(orderItem);
+
             await _unitOfWork.OrderItems.AddAsync(orderItem);
 
             totalPriceCents += menuItem.PriceCents * item.Quantity;
