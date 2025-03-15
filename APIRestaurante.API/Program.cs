@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using DotNetEnv;
+using APIRestaurante.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,11 +42,7 @@ builder.Services.AddDbContext<RestaurantContext>(options =>
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
-        options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = true;
     })
     .AddEntityFrameworkStores<RestaurantContext>()
     .AddDefaultTokenProviders();
@@ -102,10 +99,12 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
 

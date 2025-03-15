@@ -9,5 +9,6 @@ namespace APIRestaurante.Domain.Interfaces
         Task AddAsync(MenuItem menuItem);
         Task UpdatePartialAsync(MenuItem menuItem);
         Task DeleteAsync(MenuItem menuItem);
+        Task<IEnumerable<MenuItem>> GetListAsync(Func<MenuItem, bool> predicate);
     }
 }
