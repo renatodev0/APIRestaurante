@@ -63,7 +63,7 @@ public class OrderService : IOrderService
         return await _unitOfWork.Orders.GetByIdAsync(id);
     }
 
-    public async Task<Order?> UpdateOrderAsync(int id, UpdateOrderDto request)
+    public async Task<Order?> UpdateOrderAsync(int id, string userId, UpdateOrderDto request)
     {
         var order = await _unitOfWork.Orders.GetByIdAsync(id);
         if (order == null) throw new Exception("Pedido não encontrado.");
@@ -73,6 +73,7 @@ public class OrderService : IOrderService
 
         order.TotalPriceCents = request.TotalPriceCents ?? order.TotalPriceCents;
         order.UpdatedAt = DateTime.UtcNow;
+        order.UpdatedBy = userId;
         
         await _unitOfWork.Orders.UpdateAsync(order);
         await _unitOfWork.CompleteAsync();
@@ -80,7 +81,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order?> AddOrderItemAsync(int OrderId, AddOrderItemDto request)
+    public async Task<Order?> AddOrderItemAsync(int OrderId, string userId, AddOrderItemDto request)
     {
         var order = await _unitOfWork.Orders.GetByIdAsync(OrderId);
         if (order == null) throw new Exception("Pedido não encontrado.");
@@ -106,6 +107,7 @@ public class OrderService : IOrderService
 
         order.TotalPriceCents += totalPriceCents;
         order.UpdatedAt = DateTime.UtcNow;
+        order.UpdatedBy = userId;
 
         await _unitOfWork.Orders.UpdateAsync(order);
         await _unitOfWork.CompleteAsync();
@@ -113,7 +115,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order?> UpdateOrderItemAsync(int ordemItemId, UpdateOrderItemDto request)
+    public async Task<Order?> UpdateOrderItemAsync(int ordemItemId, string userId, UpdateOrderItemDto request)
     {
         var orderItem = await _unitOfWork.OrderItems.GetByIdAsync(ordemItemId);
         if (orderItem == null) throw new Exception("Item do pedido não encontrado.");
@@ -125,6 +127,7 @@ public class OrderService : IOrderService
         orderItem.Quantity = request.Quantity;
         order.TotalPriceCents += orderItem.MenuItem.PriceCents * orderItem.Quantity;
         order.UpdatedAt = DateTime.UtcNow;
+        order.UpdatedBy = userId;
 
         await _unitOfWork.OrderItems.UpdateAsync(orderItem);
         await _unitOfWork.Orders.UpdateAsync(order);
@@ -133,7 +136,7 @@ public class OrderService : IOrderService
         return order;
     }
 
-    public async Task<Order?> RemoveOrderItemAsync(int orderItemId)
+    public async Task<Order?> RemoveOrderItemAsync(int orderItemId, string userId)
     {
         var orderItem = await _unitOfWork.OrderItems.GetByIdAsync(orderItemId);
         if (orderItem == null) throw new Exception("Item do pedido não encontrado.");
@@ -143,6 +146,7 @@ public class OrderService : IOrderService
 
         order.TotalPriceCents -= orderItem.MenuItem.PriceCents * orderItem.Quantity;
         order.UpdatedAt = DateTime.UtcNow;
+        order.UpdatedBy = userId;
 
         await _unitOfWork.OrderItems.RemoveAsync(orderItem);
         await _unitOfWork.Orders.UpdateAsync(order);

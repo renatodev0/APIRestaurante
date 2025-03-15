@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using APIRestaurante.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace APIRestaurante.Api.Controllers
 {
@@ -57,7 +58,14 @@ namespace APIRestaurante.Api.Controllers
         {
             try
             {
-                var order = await _orderService.UpdateOrderAsync(id, request);
+                var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized(new { message = "Usuário não autenticado." });
+                }
+
+                var order = await _orderService.UpdateOrderAsync(id, userId, request);
                 if (order == null)
                 {
                     return NotFound(new { message = "Pedido não encontrado." });
@@ -76,7 +84,14 @@ namespace APIRestaurante.Api.Controllers
         {
             try
             {
-                var order = await _orderService.AddOrderItemAsync(orderId, request);
+                var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized(new { message = "Usuário não autenticado." });
+                }
+
+                var order = await _orderService.AddOrderItemAsync(orderId, userId, request);
                 return Ok(order);
             }
             catch (Exception ex)
@@ -92,7 +107,14 @@ namespace APIRestaurante.Api.Controllers
         {
             try
             {
-                var order = await _orderService.UpdateOrderItemAsync(orderItemId, request);
+                var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized(new { message = "Usuário não autenticado." });
+                }
+
+                var order = await _orderService.UpdateOrderItemAsync(orderItemId, userId, request);
                 if (order == null)
                 {
                     return NotFound(new { message = "Item do pedido não encontrado." });
@@ -111,7 +133,14 @@ namespace APIRestaurante.Api.Controllers
         {
             try
             {
-                var order = await _orderService.RemoveOrderItemAsync(orderItemId);
+                var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId == null)
+                {
+                    return Unauthorized(new { message = "Usuário não autenticado." });
+                }
+
+                var order = await _orderService.RemoveOrderItemAsync(orderItemId, userId);
                 if (order == null)
                 {
                     return NotFound(new { message = "Item do pedido não encontrado." });
