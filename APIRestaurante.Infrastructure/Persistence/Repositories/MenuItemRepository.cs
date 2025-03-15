@@ -53,5 +53,10 @@ namespace APIRestaurante.Infrastructure.Persistence.Repositories
             _context.MenuItems.Remove(menuItem);
             return Task.CompletedTask;
         }
+
+        public async Task<IEnumerable<MenuItem>> GetListAsync(Func<MenuItem, bool> predicate)
+        {
+            return await Task.FromResult(_context.MenuItems.Where(predicate).ToList());
+        }
     }
 }

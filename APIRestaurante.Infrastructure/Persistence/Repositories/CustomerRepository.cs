@@ -22,5 +22,15 @@ namespace APIRestaurante.Infrastructure.Persistence.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
+
+        public async Task AddAsync(Customer customer)
+        {
+            await _context.Customers.AddAsync(customer);
+        }
+
+        public async Task<Customer?> GetFirstOrDefaultAsync(Func<Customer, bool> predicate)
+        {
+            return await Task.FromResult(_context.Customers.FirstOrDefault(predicate));
+        }
     }
 }
