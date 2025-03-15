@@ -31,7 +31,11 @@ namespace APIRestaurante.Infrastructure.Repositories
 
         public async Task<IEnumerable<Order>> GetAllAsync()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.MenuItem)
+                .ToListAsync();
         }
 
         public async Task UpdateAsync(Order order)
