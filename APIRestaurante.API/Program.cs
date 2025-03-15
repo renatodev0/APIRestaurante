@@ -31,6 +31,9 @@ var jwtKey = builder.Configuration["JWT_KEY"];
 var jwtIssuer = builder.Configuration["JWT_ISSUER"];
 var jwtAudience = builder.Configuration["JWT_AUDIENCE"];
 
+var port = builder.Configuration["PORT"] ?? "8081";
+
+builder.WebHost.UseUrls($"http://*:{port}");
 
 if (string.IsNullOrEmpty(jwtKey))
 {
